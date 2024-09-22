@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import vn.lilturtle.jobhunter.domain.User;
 
 @Repository
-public interface UserRepository extends JpaRepository<User , Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
-    User save(User newUser);
 }
