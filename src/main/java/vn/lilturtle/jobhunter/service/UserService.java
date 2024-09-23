@@ -40,9 +40,14 @@ public class UserService {
     public User handleUpdateUser(User user) {
         User currentUser = this.fetchUserById(user.getId());
         if (currentUser != null) {
-            currentUser.setName(user.getName());
-            currentUser.setEmail(user.getEmail());
-            currentUser.setPassword(user.getPassword());
+
+            if (user.getName() != null && !user.getName().equals(currentUser.getName())) {
+                currentUser.setName(user.getName());
+            } else if (user.getEmail() != null && !user.getEmail().equals(currentUser.getEmail())) {
+                currentUser.setEmail(user.getEmail());
+            } else if (currentUser.getPassword() != null && !user.getPassword().equals(currentUser.getPassword())) {
+                currentUser.setPassword(user.getPassword());
+            }
 
             currentUser = this.userRepository.save(currentUser);
         }
