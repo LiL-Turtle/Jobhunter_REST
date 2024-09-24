@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import vn.lilturtle.jobhunter.domain.User;
 import vn.lilturtle.jobhunter.service.UserService;
+import vn.lilturtle.jobhunter.service.error.IdInvalidException;
+
 import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
@@ -24,21 +26,28 @@ public class UserController {
         this.userService = userService;
     }
 
+    // create user
     @PostMapping("/users")
     public ResponseEntity<User> createNewUser(@RequestBody User postManUser) {
         User binUser = this.userService.handleCreateUser(postManUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(binUser);
     }
 
+    // delete user
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable("id") long id) {
+    public ResponseEntity<String> deleteUser(@PathVariable("id") long id) throws IdInvalidException {
+        if (id >= 1500) {
+            throw new IdInvalidException("ID must be less than 1500");
+        }
+
         this.userService.handleDeleleUser(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Delete user with id " + id + " success");
         // return ResponseEntity.ok("Delete user " + id + " success");
         // return ResponseEntity.status(HttpStatus.OK).body("Delete user " + id + "
         // success");
     }
 
+    // fetch user by id
     @GetMapping("/users/{id}")
     public ResponseEntity<User> getUserById(@PathVariable("id") long id) {
         User user = this.userService.fetchUserById(id);
@@ -46,6 +55,7 @@ public class UserController {
         // return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
+    // fetch all users
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> listUser = this.userService.fetchAllUsers();
@@ -53,6 +63,7 @@ public class UserController {
         // return ResponseEntity.status(HttpStatus.OK).body(listUser);
     }
 
+    // update user
     @PutMapping("/users")
     public ResponseEntity<User> udpateUser(@RequestBody User updateUser) {
         updateUser = this.userService.handleUpdateUser(updateUser);
