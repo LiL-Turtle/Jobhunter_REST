@@ -3,6 +3,7 @@ package vn.lilturtle.jobhunter.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import vn.lilturtle.jobhunter.domain.User;
@@ -52,6 +53,10 @@ public class UserService {
             currentUser = this.userRepository.save(currentUser);
         }
         return currentUser;
+    }
+
+    public User handleGetUserByUserName(String username) throws UsernameNotFoundException {
+        return this.userRepository.findByEmail(username);
     }
 
 }

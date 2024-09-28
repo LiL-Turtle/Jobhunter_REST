@@ -8,6 +8,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.stereotype.Component;
 
 @Configuration
 @EnableMethodSecurity(securedEnabled = true)
@@ -24,11 +25,12 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(
                         authz -> authz
-                                .requestMatchers("/", "/users").permitAll()
-                                .anyRequest().authenticated()
+                                .requestMatchers("/").permitAll()
+//                                .anyRequest().authenticated()
+                                .anyRequest().permitAll()
 
                 )
-                .formLogin(f -> f.permitAll())
+                .formLogin(f -> f.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
