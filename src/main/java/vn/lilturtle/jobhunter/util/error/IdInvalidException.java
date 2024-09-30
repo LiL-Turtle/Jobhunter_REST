@@ -1,4 +1,4 @@
-package vn.lilturtle.jobhunter.service.error;
+package vn.lilturtle.jobhunter.util.error;
 
 public class IdInvalidException extends Exception {
 

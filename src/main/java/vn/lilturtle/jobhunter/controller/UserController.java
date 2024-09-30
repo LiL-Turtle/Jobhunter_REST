@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import vn.lilturtle.jobhunter.domain.User;
 import vn.lilturtle.jobhunter.service.UserService;
-import vn.lilturtle.jobhunter.service.error.IdInvalidException;
+import vn.lilturtle.jobhunter.util.error.IdInvalidException;
 
 import org.springframework.web.bind.annotation.PutMapping;
 
@@ -47,9 +47,9 @@ public class UserController {
 
         this.userService.handleDeleleUser(id);
         return ResponseEntity.ok("Delete user with id " + id + " success");
-        // return ResponseEntity.ok("Delete user " + id + " success");
-        // return ResponseEntity.status(HttpStatus.OK).body("Delete user " + id + "
-        // success");
+//         return ResponseEntity.ok("Delete user " + id + " success");
+//         return ResponseEntity.status(HttpStatus.OK).body("Delete user " + id + "
+//         success");
     }
 
     // fetch user by id
