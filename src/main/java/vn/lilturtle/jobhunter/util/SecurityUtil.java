@@ -32,7 +32,7 @@ public class SecurityUtil {
     @Value("${lilturtle.jwt.token-validity-in-seconds}")
     private long jwtKeyExpiration;
 
-
+    //tạo token khi đăng nhập 
     public String createToken(Authentication authentication) {
         Instant now = Instant.now();
         Instant validity = now.plus(this.jwtKeyExpiration, ChronoUnit.SECONDS);
