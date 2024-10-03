@@ -14,6 +14,6 @@ public class HelloController {
 //        if(true){
 //            throw new IdInvalidException("Có lỗi đại vương ơi");
 //        }
-        return "Hello World!";
+        return "Hello World, Thiên đây";
     }
 }
