@@ -1,10 +1,11 @@
 package vn.lilturtle.jobhunter.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import vn.lilturtle.jobhunter.util.SecurityUtil;
 
 import java.time.Instant;
 
@@ -28,6 +29,7 @@ public class Company {
 
     private String logo;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
     private Instant createdAt;
 
     private Instant updatedAt;
@@ -35,6 +37,15 @@ public class Company {
     private String createBy;
 
     private String updateBy;
+
+    @PrePersist
+    public void handleBeforeCreatedAt() {
+        this.createBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
+                ? SecurityUtil.getCurrentUserLogin().get()
+                : "";
+        this.createdAt = Instant.now();
+
+    }
 
 
 }
