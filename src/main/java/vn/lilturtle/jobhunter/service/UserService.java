@@ -3,10 +3,14 @@ package vn.lilturtle.jobhunter.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import vn.lilturtle.jobhunter.domain.User;
+import vn.lilturtle.jobhunter.domain.dto.Meta;
+import vn.lilturtle.jobhunter.domain.dto.ResultPaginationDTO;
 import vn.lilturtle.jobhunter.repository.UserRepository;
 
 @Service
@@ -36,6 +40,24 @@ public class UserService {
 
     public List<User> fetchAllUsers() {
         return this.userRepository.findAll();
+    }
+
+    public ResultPaginationDTO fetchAllUsers(Pageable pageable) {
+        Page<User> pageUser = this.userRepository.findAll(pageable);
+        ResultPaginationDTO rs = new ResultPaginationDTO();
+        Meta mt = new Meta();
+
+        mt.setPage(pageUser.getNumber() + 1);
+        mt.setPageSize(pageUser.getSize());
+
+        mt.setPages(pageUser.getTotalPages());
+        mt.setTotal(pageUser.getTotalElements());
+
+        rs.setMeta(mt);
+        rs.setResult(pageUser.getContent());
+
+
+        return rs;
     }
 
     public User handleUpdateUser(User user) {
