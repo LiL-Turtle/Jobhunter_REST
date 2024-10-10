@@ -3,8 +3,10 @@ package vn.lilturtle.jobhunter.controller;
 import java.util.List;
 import java.util.Optional;
 
+import com.turkraft.springfilter.boot.Filter;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -60,15 +62,11 @@ public class UserController {
     // fetch all users
     @GetMapping("/users")
     public ResponseEntity<ResultPaginationDTO> getAllUsers(
-            @RequestParam("current") Optional<String> currentOptional,
-            @RequestParam("pageSize") Optional<String> pageSizeOptional
+            @Filter
+            Specification<User> spec,
+            Pageable pageable
     ) {
-        String sCurrent = currentOptional.isPresent() ? currentOptional.get() : "";
-        String sPageSize = pageSizeOptional.isPresent() ? pageSizeOptional.get() : "";
-        int current = Integer.parseInt(sCurrent);
-        int pageSize = Integer.parseInt(sPageSize);
-        Pageable pageable = PageRequest.of(current - 1, pageSize);
-        ResultPaginationDTO rs = this.userService.fetchAllUsers(pageable);
+        ResultPaginationDTO rs = this.userService.fetchAllUsers(spec, pageable);
         return ResponseEntity.ok(rs);
         // return ResponseEntity.status(HttpStatus.OK).body(listUser);
     }
