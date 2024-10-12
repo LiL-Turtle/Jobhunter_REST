@@ -12,11 +12,13 @@ import vn.lilturtle.jobhunter.domain.Company;
 import vn.lilturtle.jobhunter.domain.User;
 import vn.lilturtle.jobhunter.domain.dto.ResultPaginationDTO;
 import vn.lilturtle.jobhunter.service.CompanyService;
+import vn.lilturtle.jobhunter.util.annotation.ApiMessage;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/api/v1")
 public class CompanyController {
 
     private final CompanyService companyService;
@@ -32,6 +34,7 @@ public class CompanyController {
     }
 
     @GetMapping("/companies")
+    @ApiMessage("Fetch companies")
     public ResponseEntity<ResultPaginationDTO> getAllCompanies(
             @Filter
             Specification<Company> spec,

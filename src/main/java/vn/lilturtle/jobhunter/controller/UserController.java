@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.*;
 import vn.lilturtle.jobhunter.domain.User;
 import vn.lilturtle.jobhunter.domain.dto.ResultPaginationDTO;
 import vn.lilturtle.jobhunter.service.UserService;
+import vn.lilturtle.jobhunter.util.annotation.ApiMessage;
 import vn.lilturtle.jobhunter.util.error.IdInvalidException;
 
 @RestController
+@RequestMapping("/api/v1")
 public class UserController {
 
     private final UserService userService;
@@ -61,6 +63,7 @@ public class UserController {
 
     // fetch all users
     @GetMapping("/users")
+    @ApiMessage("Fetch all users")
     public ResponseEntity<ResultPaginationDTO> getAllUsers(
             @Filter
             Specification<User> spec,
