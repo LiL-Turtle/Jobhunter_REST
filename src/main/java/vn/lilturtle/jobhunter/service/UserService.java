@@ -2,6 +2,7 @@ package vn.lilturtle.jobhunter.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,8 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import vn.lilturtle.jobhunter.domain.User;
-import vn.lilturtle.jobhunter.domain.dto.Meta;
-import vn.lilturtle.jobhunter.domain.dto.ResultPaginationDTO;
+import vn.lilturtle.jobhunter.domain.dto.*;
 import vn.lilturtle.jobhunter.repository.UserRepository;
 
 @Service
@@ -55,8 +55,20 @@ public class UserService {
         mt.setTotal(pageUser.getTotalElements());
 
         rs.setMeta(mt);
-        rs.setResult(pageUser.getContent());
 
+        //remove sentitive data
+        List<ResUserDTO> listUser = pageUser.getContent().stream().map(item -> new ResUserDTO(
+                item.getId(),
+                item.getEmail(),
+                item.getName(),
+                item.getGender(),
+                item.getAddress(),
+                item.getAge(),
+                item.getUpdatedAt(),
+                item.getCreatedAt()
+        )).collect(Collectors.toList());
+
+        rs.setResult(listUser);
 
         return rs;
     }
@@ -69,8 +81,12 @@ public class UserService {
                 currentUser.setName(user.getName());
             } else if (user.getEmail() != null && !user.getEmail().equals(currentUser.getEmail())) {
                 currentUser.setEmail(user.getEmail());
-            } else if (currentUser.getPassword() != null && !user.getPassword().equals(currentUser.getPassword())) {
-                currentUser.setPassword(user.getPassword());
+            } else if (user.getAge() != currentUser.getAge()) {
+                currentUser.setAge(user.getAge());
+            } else if (user.getAddress() != null && !user.getAddress().equals(currentUser.getAddress())) {
+                currentUser.setAddress(user.getAddress());
+            } else if (user.getGender() != null && !user.getGender().equals(currentUser.getGender())) {
+                currentUser.setGender(user.getGender());
             }
 
             currentUser = this.userRepository.save(currentUser);
@@ -82,4 +98,53 @@ public class UserService {
         return this.userRepository.findByEmail(username);
     }
 
+    public boolean isEmailIsExist(String email) {
+        return this.userRepository.existsByEmail(email);
+    }
+
+    public ResCreateUserDTO convertToResCreateUserDTO(User user) {
+        ResCreateUserDTO res = new ResCreateUserDTO();
+
+        res.setId(user.getId());
+        res.setName(user.getName());
+        res.setEmail(user.getEmail());
+        res.setAge(user.getAge());
+        res.setGender(user.getGender());
+        res.setCreatedAt(user.getCreatedAt());
+        res.setAddress(user.getAddress());
+
+        return res;
+    }
+
+    public boolean isIdIsExist(long id) {
+        return this.userRepository.existsById(id);
+    }
+
+    public ResUpdateUserDTO convertToResUpdateUserDTO(User user) {
+        ResUpdateUserDTO res = new ResUpdateUserDTO();
+
+        res.setId(user.getId());
+        res.setName(user.getName());
+        res.setAge(user.getAge());
+        res.setGender(user.getGender());
+        res.setUpdatedAt(user.getUpdatedAt());
+        res.setAddress(user.getAddress());
+
+        return res;
+    }
+
+    public ResUserDTO convertToResUserDTO(User user) {
+        ResUserDTO res = new ResUserDTO();
+
+        res.setId(user.getId());
+        res.setEmail(user.getEmail());
+        res.setName(user.getName());
+        res.setAge(user.getAge());
+        res.setGender(user.getGender());
+        res.setAddress(user.getAddress());
+        res.setCreatedAt(user.getCreatedAt());
+        res.setUpdatedAt(user.getUpdatedAt());
+
+        return res;
+    }
 }

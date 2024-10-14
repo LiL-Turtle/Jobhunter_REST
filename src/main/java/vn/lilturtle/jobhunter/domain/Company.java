@@ -35,13 +35,13 @@ public class Company {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
     private Instant updatedAt;
 
-    private String createBy;
+    private String createdBy;
 
-    private String updateBy;
+    private String updatedBy;
 
     @PrePersist
     public void handleBeforeCreate() {
-        this.createBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
+        this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
         this.createdAt = Instant.now();
@@ -50,7 +50,7 @@ public class Company {
     @PreUpdate
     public void handleBeforeUpdate() {
         this.updatedAt = Instant.now();
-        this.updateBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
+        this.updatedBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : " ";
     }

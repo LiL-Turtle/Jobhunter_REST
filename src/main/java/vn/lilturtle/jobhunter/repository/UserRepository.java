@@ -15,4 +15,8 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     @Override
     List<User> findAll(Specification<User> spec);
+
+    boolean existsByEmail(String email);
+
+    boolean existsById(Long id);
 }

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import com.turkraft.springfilter.boot.Filter;
+import jakarta.persistence.Id;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -13,6 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import vn.lilturtle.jobhunter.domain.User;
+import vn.lilturtle.jobhunter.domain.dto.ResCreateUserDTO;
+import vn.lilturtle.jobhunter.domain.dto.ResUpdateUserDTO;
+import vn.lilturtle.jobhunter.domain.dto.ResUserDTO;
 import vn.lilturtle.jobhunter.domain.dto.ResultPaginationDTO;
 import vn.lilturtle.jobhunter.service.UserService;
 import vn.lilturtle.jobhunter.util.annotation.ApiMessage;
@@ -32,22 +37,35 @@ public class UserController {
 
     // create user
     @PostMapping("/users")
-    public ResponseEntity<User> createNewUser(@RequestBody User postManUser) {
+    @ApiMessage("Create a new user")
+    public ResponseEntity<ResCreateUserDTO> createNewUser(@Valid @RequestBody User postManUser) throws IdInvalidException {
+        boolean isEmailExist = this.userService.isEmailIsExist(postManUser.getEmail());
+        if (isEmailExist) {
+            throw new IdInvalidException(
+                    "Email" + postManUser.getEmail() + " is already in use"
+            );
+        }
+
         String hashPassword = this.passwordEncoder.encode(postManUser.getPassword());
         postManUser.setPassword(hashPassword);
         User binUser = this.userService.handleCreateUser(postManUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body(binUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.convertToResCreateUserDTO(binUser));
     }
 
     // delete user
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable("id") long id) throws IdInvalidException {
-        if (id >= 1500) {
-            throw new IdInvalidException("ID must be less than 1500");
+    @ApiMessage("delete a user")
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") long id) throws IdInvalidException {
+        boolean isIdExist = this.userService.isIdIsExist(id);
+
+        if (!isIdExist) {
+            throw new IdInvalidException(
+                    "User with id " + id + " is not exist"
+            );
         }
 
         this.userService.handleDeleleUser(id);
-        return ResponseEntity.ok("Delete user with id " + id + " success");
+        return ResponseEntity.ok().build();
 //         return ResponseEntity.ok("Delete user " + id + " success");
 //         return ResponseEntity.status(HttpStatus.OK).body("Delete user " + id + "
 //         success");
@@ -55,9 +73,19 @@ public class UserController {
 
     // fetch user by id
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable("id") long id) {
+    @ApiMessage("fetch user by id")
+    public ResponseEntity<ResUserDTO> getUserById(@PathVariable("id") long id) throws IdInvalidException {
+        boolean isIdExist = this.userService.isIdIsExist(id);
+
+        if (!isIdExist) {
+            throw new IdInvalidException(
+                    "Id " + id + " is not exist"
+            );
+        }
+
         User user = this.userService.fetchUserById(id);
-        return ResponseEntity.ok(user);
+
+        return ResponseEntity.ok(this.userService.convertToResUserDTO(user));
         // return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
@@ -76,9 +104,18 @@ public class UserController {
 
     // update user
     @PutMapping("/users")
-    public ResponseEntity<User> udpateUser(@RequestBody User updateUser) {
+    @ApiMessage("update a user")
+    public ResponseEntity<ResUpdateUserDTO> udpateUser(@RequestBody User updateUser) throws IdInvalidException {
+
+        boolean isIdExist = this.userService.isIdIsExist(updateUser.getId());
+
+        if (!isIdExist) {
+            throw new IdInvalidException(
+                    "Id " + updateUser.getId() + " is not exist"
+            );
+        }
         updateUser = this.userService.handleUpdateUser(updateUser);
-        return ResponseEntity.ok(updateUser);
+        return ResponseEntity.ok(this.userService.convertToResUpdateUserDTO(updateUser));
         // return ResponseEntity.status(HttpStatus.ACCEPTED).body(updateUser);
     }
 
