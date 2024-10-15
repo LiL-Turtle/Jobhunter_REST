@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import vn.lilturtle.jobhunter.domain.RestResponse;
+import vn.lilturtle.jobhunter.domain.User;
 import vn.lilturtle.jobhunter.domain.dto.LoginDTO;
 import vn.lilturtle.jobhunter.domain.dto.ResLoginDTO;
+import vn.lilturtle.jobhunter.service.UserService;
 import vn.lilturtle.jobhunter.util.SecurityUtil;
 
 @RestController
@@ -23,11 +25,13 @@ public class AuthController {
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final SecurityUtil securityUtil;
+    private final UserService userService;
 
     public AuthController(AuthenticationManagerBuilder authenticationManagerBuilder,
-                          SecurityUtil securityUtil) {
+                          SecurityUtil securityUtil, UserService userService) {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.securityUtil = securityUtil;
+        this.userService = userService;
     }
 
     @PostMapping("/login")
@@ -45,6 +49,16 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         ResLoginDTO res = new ResLoginDTO();
+
+
+        User currentUserDB = this.userService.handleGetUserByUserName(loginDTO.getUsername());
+
+        if (currentUserDB != null) {
+            ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(currentUserDB.getId(), currentUserDB.getEmail(), currentUserDB.getName());
+            res.setUser(userLogin);
+        }
+
+
         res.setAccessToken(access_token);
         return ResponseEntity.ok().body(res);
     }
