@@ -1,5 +1,8 @@
 package vn.lilturtle.jobhunter.controller;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -27,6 +30,9 @@ public class AuthController {
     private final SecurityUtil securityUtil;
     private final UserService userService;
 
+    @Value("${lilturtle.jwt.refresh-token-validity-in-seconds}")
+    private long refreshTokenExpiration;
+
     public AuthController(AuthenticationManagerBuilder authenticationManagerBuilder,
                           SecurityUtil securityUtil, UserService userService) {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
@@ -44,7 +50,7 @@ public class AuthController {
 
 
         //create token
-        String access_token = this.securityUtil.createToken(authentication);
+        String access_token = this.securityUtil.createAccessToken(authentication);
         // nạp thông tin (nếu xử lý thành công) vào SecurityContext
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -58,9 +64,26 @@ public class AuthController {
             res.setUser(userLogin);
         }
 
-
         res.setAccessToken(access_token);
-        return ResponseEntity.ok().body(res);
+
+        // create refresh token
+        String refresh_token = this.securityUtil.createRefreshToken(loginDTO.getUsername(), res);
+
+        // update user
+        this.userService.updateUserToken(refresh_token, loginDTO.getUsername());
+
+        //set cookie
+        ResponseCookie resCookies = ResponseCookie
+                .from("refresh_token1", refresh_token)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(refreshTokenExpiration)
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, resCookies.toString())
+                .body(res);
     }
 
 }
