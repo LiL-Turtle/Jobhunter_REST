@@ -66,9 +66,6 @@ public class UserController {
 
         this.userService.handleDeleleUser(id);
         return ResponseEntity.ok().build();
-//         return ResponseEntity.ok("Delete user " + id + " success");
-//         return ResponseEntity.status(HttpStatus.OK).body("Delete user " + id + "
-//         success");
     }
 
     // fetch user by id
@@ -86,7 +83,6 @@ public class UserController {
         User user = this.userService.fetchUserById(id);
 
         return ResponseEntity.ok(this.userService.convertToResUserDTO(user));
-        // return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
     // fetch all users
@@ -99,7 +95,6 @@ public class UserController {
     ) {
         ResultPaginationDTO rs = this.userService.fetchAllUsers(spec, pageable);
         return ResponseEntity.ok(rs);
-        // return ResponseEntity.status(HttpStatus.OK).body(listUser);
     }
 
     // update user
@@ -116,7 +111,6 @@ public class UserController {
         }
         updateUser = this.userService.handleUpdateUser(updateUser);
         return ResponseEntity.ok(this.userService.convertToResUpdateUserDTO(updateUser));
-        // return ResponseEntity.status(HttpStatus.ACCEPTED).body(updateUser);
     }
 
 }
