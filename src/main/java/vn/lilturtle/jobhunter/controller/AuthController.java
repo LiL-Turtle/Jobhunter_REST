@@ -12,9 +12,8 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
-import vn.lilturtle.jobhunter.domain.RestResponse;
 import vn.lilturtle.jobhunter.domain.User;
-import vn.lilturtle.jobhunter.domain.dto.LoginDTO;
+import vn.lilturtle.jobhunter.domain.dto.ReqLoginDTO;
 import vn.lilturtle.jobhunter.domain.dto.ResLoginDTO;
 import vn.lilturtle.jobhunter.service.UserService;
 import vn.lilturtle.jobhunter.util.SecurityUtil;
@@ -41,7 +40,7 @@ public class AuthController {
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<ResLoginDTO> login(@Valid @RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<ResLoginDTO> login(@Valid @RequestBody ReqLoginDTO loginDTO) {
         // Nạp input gồm username/password vào Security
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginDTO.getUsername(), loginDTO.getPassword());
