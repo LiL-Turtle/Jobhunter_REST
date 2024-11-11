@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import vn.lilturtle.jobhunter.domain.User;
-import vn.lilturtle.jobhunter.domain.dto.ReqLoginDTO;
-import vn.lilturtle.jobhunter.domain.dto.ResLoginDTO;
+import vn.lilturtle.jobhunter.domain.request.ReqLoginDTO;
+import vn.lilturtle.jobhunter.domain.response.ResLoginDTO;
 import vn.lilturtle.jobhunter.service.UserService;
 import vn.lilturtle.jobhunter.util.SecurityUtil;
 import vn.lilturtle.jobhunter.util.annotation.ApiMessage;

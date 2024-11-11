@@ -2,20 +2,15 @@ package vn.lilturtle.jobhunter.controller;
 
 import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.lilturtle.jobhunter.domain.Company;
-import vn.lilturtle.jobhunter.domain.User;
-import vn.lilturtle.jobhunter.domain.dto.ResultPaginationDTO;
+import vn.lilturtle.jobhunter.domain.response.ResultPaginationDTO;
 import vn.lilturtle.jobhunter.service.CompanyService;
 import vn.lilturtle.jobhunter.util.annotation.ApiMessage;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1")

@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import vn.lilturtle.jobhunter.domain.Company;
-import vn.lilturtle.jobhunter.domain.dto.ResultPaginationDTO;
+import vn.lilturtle.jobhunter.domain.response.ResultPaginationDTO;
 import vn.lilturtle.jobhunter.repository.CompanyRepository;
 
 import java.util.List;
@@ -55,7 +55,7 @@ public class CompanyService {
 
     public Company handleUpdateCompany(Company company) {
         Company currentCompany = this.fecthCompanyById(company.getId());
- 
+
         if (currentCompany != null) {
 
             if (currentCompany.getName() != null && !currentCompany.getName().equals(company.getName())) {

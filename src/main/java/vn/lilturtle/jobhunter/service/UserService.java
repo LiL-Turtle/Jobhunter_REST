@@ -11,7 +11,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import vn.lilturtle.jobhunter.domain.User;
-import vn.lilturtle.jobhunter.domain.dto.*;
+import vn.lilturtle.jobhunter.domain.response.ResCreateUserDTO;
+import vn.lilturtle.jobhunter.domain.response.ResUpdateUserDTO;
+import vn.lilturtle.jobhunter.domain.response.ResUserDTO;
+import vn.lilturtle.jobhunter.domain.response.ResultPaginationDTO;
 import vn.lilturtle.jobhunter.repository.UserRepository;
 
 @Service

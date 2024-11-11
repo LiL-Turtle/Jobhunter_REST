@@ -1,11 +1,7 @@
-package vn.lilturtle.jobhunter.domain.dto;
+package vn.lilturtle.jobhunter.domain.response;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
-import vn.lilturtle.jobhunter.util.SecurityUtil;
 import vn.lilturtle.jobhunter.util.constant.GenderEnum;
 
 import java.time.Instant;
