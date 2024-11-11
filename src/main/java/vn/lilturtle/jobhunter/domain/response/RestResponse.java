@@ -1,4 +1,4 @@
-package vn.lilturtle.jobhunter.domain;
+package vn.lilturtle.jobhunter.domain.response;
 
 public class RestResponse<T> {
     private int statusCode;
