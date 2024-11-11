@@ -5,8 +5,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import vn.lilturtle.jobhunter.domain.Company;
-import vn.lilturtle.jobhunter.domain.User;
-import vn.lilturtle.jobhunter.domain.dto.Meta;
 import vn.lilturtle.jobhunter.domain.dto.ResultPaginationDTO;
 import vn.lilturtle.jobhunter.repository.CompanyRepository;
 
@@ -42,7 +40,7 @@ public class CompanyService {
 
         Page<Company> pageCompany = this.companyRepository.findAll(spec, pageable);
         ResultPaginationDTO rs = new ResultPaginationDTO();
-        Meta mt = new Meta();
+        ResultPaginationDTO.Meta mt = new ResultPaginationDTO.Meta();
 
         mt.setPage(pageCompany.getNumber() + 1);
         mt.setPageSize(pageCompany.getSize());
@@ -57,7 +55,7 @@ public class CompanyService {
 
     public Company handleUpdateCompany(Company company) {
         Company currentCompany = this.fecthCompanyById(company.getId());
-
+ 
         if (currentCompany != null) {
 
             if (currentCompany.getName() != null && !currentCompany.getName().equals(company.getName())) {
