@@ -7,5 +7,4 @@ import vn.lilturtle.jobhunter.domain.Company;
 
 @Repository
 public interface CompanyRepository extends JpaRepository<Company, Long>, JpaSpecificationExecutor<Company> {
-
 }
