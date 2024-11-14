@@ -1,10 +1,11 @@
 package vn.lilturtle.jobhunter.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import vn.lilturtle.jobhunter.util.SecurityUtil;
 
@@ -12,40 +13,29 @@ import java.time.Instant;
 import java.util.List;
 
 @Entity
-@Table(name = "companies")
-@Getter
+@Table(name = "skills")
 @Setter
-public class Company {
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public class Skill {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotBlank(message = "name must not be blank")
+    @NotBlank(message = "Name must not be blank")
     private String name;
 
-    @Column(columnDefinition = "MEDIUMTEXT")
-    private String description;
-
-    private String address;
-
-    private String logo;
-
     private Instant createdAt;
-
     private Instant updatedAt;
-
     private String createdBy;
-
     private String updatedBy;
 
-    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "skills")
     @JsonIgnore
-    List<User> users;
+    private List<Job> jobs;
 
-    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
-    @JsonIgnore
-    List<Job> jobs;
 
     @PrePersist
     public void handleBeforeCreate() {
@@ -62,5 +52,4 @@ public class Company {
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : " ";
     }
-
 }
