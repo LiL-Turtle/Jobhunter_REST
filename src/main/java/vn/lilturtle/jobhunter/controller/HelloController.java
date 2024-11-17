@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import vn.lilturtle.jobhunter.util.error.IdInvalidException;
 
 @RestController
-@RequestMapping("/api/v1")
+//@RequestMapping("/api/v1")
 public class HelloController {
 
     @GetMapping("/")
