@@ -1,77 +1,62 @@
 package vn.lilturtle.jobhunter.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import vn.lilturtle.jobhunter.util.SecurityUtil;
-import vn.lilturtle.jobhunter.util.constant.GenderEnum;
+import vn.lilturtle.jobhunter.util.constant.ResumeStateEnum;
 
 import java.time.Instant;
-import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(name = "resumes")
 @Getter
 @Setter
-public class User {
-
+public class Resume {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String name;
-
-    @NotBlank(message = "email must not be blank")
+    @NotBlank(message = "Email không được để trống")
     private String email;
 
-    @NotBlank(message = "password must not be blank")
-    private String password;
-
-    private int age;
+    @NotBlank(message = "Url không được để trống (upload cv chưa thành công)")
+    private String url;
 
     @Enumerated(EnumType.STRING)
-    private GenderEnum gender;
+    private ResumeStateEnum status;
 
-    private String address;
-
-    @Column(columnDefinition = "MEDIUMTEXT")
-    private String refreshToken;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
     private Instant createdAt;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
     private Instant updatedAt;
 
     private String createdBy;
     private String updatedBy;
 
     @ManyToOne
-    @JoinColumn(name = "company_id")
-    private Company company;
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    @JsonIgnore
-    List<Resume> resumes;
+    @ManyToOne
+    @JoinColumn(name = "job_id")
+    private Job job;
 
     @PrePersist
     public void handleBeforeCreate() {
         this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
+
         this.createdAt = Instant.now();
     }
 
     @PreUpdate
     public void handleBeforeUpdate() {
-        this.updatedAt = Instant.now();
         this.updatedBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
                 ? SecurityUtil.getCurrentUserLogin().get()
-                : " ";
-    }
+                : "";
 
+        this.updatedAt = Instant.now();
+    }
 
 }

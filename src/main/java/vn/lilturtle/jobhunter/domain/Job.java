@@ -33,6 +33,8 @@ public class Job {
     private String location;
     private double salary;
     private int quantity;
+
+    @Enumerated(EnumType.STRING)
     private LevelEnum level;
 
     @Column(columnDefinition = "MEDIUMTEXT")
@@ -49,6 +51,10 @@ public class Job {
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
+
+    @OneToMany(mappedBy = "job", fetch = FetchType.LAZY)
+    @JsonIgnore
+    List<Resume> resumes;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = {"jobs"})
