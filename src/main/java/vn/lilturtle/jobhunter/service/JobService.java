@@ -14,6 +14,7 @@ import vn.lilturtle.jobhunter.domain.User;
 import vn.lilturtle.jobhunter.domain.response.ResultPaginationDTO;
 import vn.lilturtle.jobhunter.domain.response.job.ResCreateJobDTO;
 import vn.lilturtle.jobhunter.domain.response.job.ResUpdateJobDTO;
+import vn.lilturtle.jobhunter.repository.CompanyRepository;
 import vn.lilturtle.jobhunter.repository.JobRepository;
 import vn.lilturtle.jobhunter.repository.SkillRepository;
 import vn.lilturtle.jobhunter.util.annotation.ApiMessage;
@@ -26,10 +27,12 @@ import java.util.stream.Collectors;
 public class JobService {
     private final JobRepository jobRepository;
     private final SkillRepository skillRepository;
+    private final CompanyRepository companyRepository;
 
-    public JobService(JobRepository jobRepository, SkillRepository skillRepository) {
+    public JobService(JobRepository jobRepository, SkillRepository skillRepository, CompanyRepository companyRepository) {
         this.jobRepository = jobRepository;
         this.skillRepository = skillRepository;
+        this.companyRepository = companyRepository;
     }
 
     public ResCreateJobDTO handleCreateJob(Job job) {
@@ -38,6 +41,13 @@ public class JobService {
 
             List<Skill> dbSkills = this.skillRepository.findByIdIn(reqskills);
             job.setSkills(dbSkills);
+        }
+        //check company
+        if (job.getCompany() != null) {
+            Optional<Company> optionalCompany = this.companyRepository.findById(job.getCompany().getId());
+            if (optionalCompany.isPresent()) {
+                job.setCompany(optionalCompany.get());
+            }
         }
         // create job
         Job currentJob = this.jobRepository.save(job);
@@ -73,6 +83,7 @@ public class JobService {
     }
 
     public ResUpdateJobDTO handleUpdateJob(Job job) {
+
         // check skills
         if (job.getSkills() != null) {
             List<Long> reqSkills = job.getSkills()
@@ -82,6 +93,7 @@ public class JobService {
             List<Skill> dbSkills = this.skillRepository.findByIdIn(reqSkills);
             job.setSkills(dbSkills);
         }
+
 
         // update job
         Job currentJob = this.fetchJobById(job.getId());
@@ -109,6 +121,13 @@ public class JobService {
             }
             if (job.getEndDate() != null && !job.getEndDate().equals(currentJob.getEndDate())) {
                 currentJob.setEndDate(job.getEndDate());
+            }
+            //check company
+            if (job.getCompany() != null && !job.getCompany().equals(currentJob.getCompany())) {
+                Optional<Company> optionalCompany = this.companyRepository.findById(job.getCompany().getId());
+                if (optionalCompany.isPresent()) {
+                    currentJob.setCompany(optionalCompany.get());
+                }
             }
             currentJob.setSkills(job.getSkills());
             currentJob.setActive(job.isActive());

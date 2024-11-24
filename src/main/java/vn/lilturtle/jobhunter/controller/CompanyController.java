@@ -11,6 +11,9 @@ import vn.lilturtle.jobhunter.domain.Company;
 import vn.lilturtle.jobhunter.domain.response.ResultPaginationDTO;
 import vn.lilturtle.jobhunter.service.CompanyService;
 import vn.lilturtle.jobhunter.util.annotation.ApiMessage;
+import vn.lilturtle.jobhunter.util.error.IdInvalidException;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -26,6 +29,19 @@ public class CompanyController {
     public ResponseEntity<Company> postCreateCompany(@Valid @RequestBody Company reqCompany) {
         Company binCompany = this.companyService.handleSaveCompany(reqCompany);
         return ResponseEntity.status(HttpStatus.CREATED).body(binCompany);
+    }
+
+    @GetMapping("/companies/{id}")
+    @ApiMessage("Fetch a company")
+    public ResponseEntity<Company> fetchACompany(@PathVariable("id") Long id) throws IdInvalidException {
+        Optional<Company> optionalCompany = this.companyService.findById(id);
+        if (!optionalCompany.isPresent()) {
+            throw new IdInvalidException(
+                    "Company with id " + id + " does not exist"
+            );
+        }
+        return ResponseEntity.ok(optionalCompany.get());
+
     }
 
     @GetMapping("/companies")

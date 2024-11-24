@@ -59,7 +59,7 @@ public class ResumeController {
 
     @DeleteMapping("/resumes/{id}")
     @ApiMessage("Delete a resume")
-    public ResponseEntity<Void> deleteResume(@PathVariable Long id) throws IdInvalidException {
+    public ResponseEntity<Void> deleteResume(@PathVariable("id") Long id) throws IdInvalidException {
         Resume resume = this.resumeService.fetchById(id);
         if (resume == null) {
             throw new IdInvalidException(
@@ -72,7 +72,7 @@ public class ResumeController {
 
     @GetMapping("/resumes/{id}")
     @ApiMessage("Fetch a resume")
-    public ResponseEntity<ResFetchResumeDTO> fetchAResume(@PathVariable Long id) throws IdInvalidException {
+    public ResponseEntity<ResFetchResumeDTO> fetchAResume(@PathVariable("id") Long id) throws IdInvalidException {
         Resume resume = this.resumeService.fetchById(id);
         if (resume == null) {
             throw new IdInvalidException(
