@@ -37,7 +37,7 @@ public class UserController {
         boolean isEmailExist = this.userService.isEmailIsExist(postManUser.getEmail());
         if (isEmailExist) {
             throw new IdInvalidException(
-                    "Email" + postManUser.getEmail() + " is already in use"
+                    "Email " + postManUser.getEmail() + " is already in use"
             );
         }
 
@@ -101,7 +101,7 @@ public class UserController {
 
         if (!isIdExist) {
             throw new IdInvalidException(
-                    "Id " + updateUser.getId() + " is not exist"
+                    "User with id " + updateUser.getId() + " is not exist"
             );
         }
         updateUser = this.userService.handleUpdateUser(updateUser);

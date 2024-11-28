@@ -109,8 +109,7 @@ public class RoleService {
     }
 
     public void deleteRole(long id) {
-        Role currentRole = this.fetchRoleById(id);
-        this.roleRepository.delete(currentRole);
+        this.roleRepository.deleteById(id);
     }
 
 }

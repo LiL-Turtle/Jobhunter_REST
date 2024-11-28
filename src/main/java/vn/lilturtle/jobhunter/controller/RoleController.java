@@ -43,19 +43,14 @@ public class RoleController {
     @PutMapping("/roles")
     @ApiMessage("Update a role")
     public ResponseEntity<Role> updateRole(@Valid @RequestBody Role role) throws IdInvalidException {
-        boolean isNameExist = this.roleService.existByName(role.getName());
         boolean isIdExist = this.roleService.existById(role.getId());
 
-        if (isNameExist) {
-            throw new IdInvalidException(
-                    "Role with name " + role.getName() + " already exists"
-            );
-        }
         if (!isIdExist) {
             throw new IdInvalidException(
                     "Role with id " + role.getId() + " does not exist"
             );
         }
+        
         Role currentRole = this.roleService.updateRole(role);
         return ResponseEntity.ok(currentRole);
     }
