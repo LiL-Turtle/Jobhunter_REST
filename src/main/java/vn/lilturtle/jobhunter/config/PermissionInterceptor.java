@@ -12,6 +12,7 @@ import vn.lilturtle.jobhunter.domain.User;
 import vn.lilturtle.jobhunter.service.UserService;
 import vn.lilturtle.jobhunter.util.SecurityUtil;
 import vn.lilturtle.jobhunter.util.error.IdInvalidException;
+import vn.lilturtle.jobhunter.util.error.PermissionException;
 
 import java.util.List;
 
@@ -48,12 +49,12 @@ public class PermissionInterceptor implements HandlerInterceptor {
                             && item.getMethod().equals(httpMethod));
 
                     if (isAllow == false) {
-                        throw new IdInvalidException(
+                        throw new PermissionException(
                                 "Ban khong co quyen truy cap endpoint nay"
                         );
                     }
                 } else {
-                    throw new IdInvalidException(
+                    throw new PermissionException(
                             "Ban khong co quyen truy cap endpoint nay"
                     );
                 }
