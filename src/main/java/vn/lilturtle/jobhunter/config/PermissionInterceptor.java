@@ -36,31 +36,31 @@ public class PermissionInterceptor implements HandlerInterceptor {
         System.out.println(">>> requestURI= " + requestURI);
 
         //check permission
-        String email = SecurityUtil.getCurrentUserLogin().isPresent() == true
-                ? SecurityUtil.getCurrentUserLogin().get()
-                : "";
-        if (email != null && !email.isEmpty()) {
-            User user = this.userService.handleGetUserByUserName(email);
-            if (user != null) {
-                Role role = user.getRole();
-                if (role != null) {
-                    List<Permission> permissions = role.getPermissions();
-                    boolean isAllow = permissions.stream().anyMatch(item -> item.getApiPath().equals(path)
-                            && item.getMethod().equals(httpMethod));
-
-                    if (isAllow == false) {
-                        throw new PermissionException(
-                                "Ban khong co quyen truy cap endpoint nay"
-                        );
-                    }
-                } else {
-                    throw new PermissionException(
-                            "Ban khong co quyen truy cap endpoint nay"
-                    );
-                }
-
-            }
-        }
+//        String email = SecurityUtil.getCurrentUserLogin().isPresent() == true
+//                ? SecurityUtil.getCurrentUserLogin().get()
+//                : "";
+//        if (email != null && !email.isEmpty()) {
+//            User user = this.userService.handleGetUserByUserName(email);
+//            if (user != null) {
+//                Role role = user.getRole();
+//                if (role != null) {
+//                    List<Permission> permissions = role.getPermissions();
+//                    boolean isAllow = permissions.stream().anyMatch(item -> item.getApiPath().equals(path)
+//                            && item.getMethod().equals(httpMethod));
+//
+//                    if (isAllow == false) {
+//                        throw new PermissionException(
+//                                "Ban khong co quyen truy cap endpoint nay"
+//                        );
+//                    }
+//                } else {
+//                    throw new PermissionException(
+//                            "Ban khong co quyen truy cap endpoint nay"
+//                    );
+//                }
+//
+//            }
+//        }
 
         return true;
     }
