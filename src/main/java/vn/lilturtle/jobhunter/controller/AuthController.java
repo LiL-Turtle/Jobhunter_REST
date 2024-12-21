@@ -183,7 +183,7 @@ public class AuthController {
 
     }
 
-    @GetMapping("/auth/logout")
+    @PostMapping("/auth/logout")
     @ApiMessage("Logout User")
     public ResponseEntity<Void> logout() throws IdInvalidException {
         String email = this.securityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
