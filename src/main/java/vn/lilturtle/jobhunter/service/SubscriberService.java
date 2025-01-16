@@ -54,6 +54,10 @@ public class SubscriberService {
         return this.subscriberRepository.findById(id).orElse(null);
     }
 
+    public Subscriber findByEmail(String email) {
+        return this.subscriberRepository.findByEmail(email);
+    }
+
     public Subscriber handleUpdateSubscriber(Subscriber subsDB, Subscriber subsRequest) {
         //Check skill
         if (subsRequest.getSkills() != null) {
