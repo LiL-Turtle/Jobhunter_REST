@@ -1,11 +1,9 @@
 package vn.lilturtle.jobhunter.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import vn.lilturtle.jobhunter.util.SecurityUtil;
 
@@ -13,32 +11,29 @@ import java.time.Instant;
 import java.util.List;
 
 @Entity
-@Table(name = "skills")
-@Setter
+@Table(name = "subscriber")
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
-public class Skill {
-
+@Setter
+public class Subscriber {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotBlank(message = "Name must not be blank")
+    @NotBlank(message = "email không được để trống")
+    private String email;
+
+    @NotBlank(message = "name không được để trống")
     private String name;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(value = {"subscribers"})
+    @JoinTable(name = "subscriber_skill", joinColumns = @JoinColumn(name = "subscriber_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
+    private List<Skill> skills;
 
     private Instant createdAt;
     private Instant updatedAt;
     private String createdBy;
     private String updatedBy;
-
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "skills")
-    @JsonIgnore
-    private List<Job> jobs;
-
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "skills")
-    @JsonIgnore
-    private List<Subscriber> subscribers;
 
 
     @PrePersist
@@ -46,14 +41,17 @@ public class Skill {
         this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
+
         this.createdAt = Instant.now();
     }
 
     @PreUpdate
     public void handleBeforeUpdate() {
-        this.updatedAt = Instant.now();
         this.updatedBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
                 ? SecurityUtil.getCurrentUserLogin().get()
-                : " ";
+                : "";
+
+        this.updatedAt = Instant.now();
     }
+
 }
